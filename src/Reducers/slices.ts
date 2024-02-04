@@ -26,6 +26,7 @@ export const rootReducer = createSlice({
 		clearState: (state) => {
 			state.result = [];
 			(state.words = []), (state.error = "");
+			state.loading = false;
 		},
 	},
 });

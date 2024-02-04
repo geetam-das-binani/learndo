@@ -1,10 +1,22 @@
 import axios from "axios";
 import { generate } from "random-words";
-
+import _ from "lodash";
+const generateMCQ = (words: { Text: string }[], index: number): string[] => {
+	const options = [...words];
+	const correctOption: string = options[index].Text;
+	// After saving the correct option remove the correct option
+	options.splice(index, 1);
+	//Randomly generating  3 elements from incorrect options
+	const inCorrectOptions: string[] = _.sampleSize(options, 3).map(
+		(w) => w.Text
+	);
+	const mcqOptions = _.shuffle([...inCorrectOptions, correctOption]);
+	return mcqOptions;
+};
 export const translateWords = async (params: LangType): Promise<WordType[]> => {
 	try {
 		let randomWords = generate(8) as string[];
-		const words = randomWords.map((i) => ({
+		const words = randomWords.map((i: string) => ({
 			Text: i,
 		}));
 
@@ -27,11 +39,14 @@ export const translateWords = async (params: LangType): Promise<WordType[]> => {
 			}
 		);
 		const received: FetchedDataType[] = response.data;
-		const arr: WordType[] = received.map((i, index) => ({
-			word: i.translations[0].text,
-			meaning: words[index].Text,
-			options: ["sds"],
-		}));
+		const arr: WordType[] = received.map((i, index) => {
+			const options: Array<string> = generateMCQ(words, index);
+			return {
+				word: i.translations[0].text,
+				meaning: words[index].Text,
+				options,
+			};
+		});
 		return arr;
 	} catch (error) {
 		console.log(error);

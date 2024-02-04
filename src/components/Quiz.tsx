@@ -30,7 +30,6 @@ const Quiz = () => {
 		setCount((prev) => prev + 1);
 		setAns("");
 	};
-	console.log(result.length);
 
 	return (
 		<Container
