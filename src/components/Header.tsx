@@ -15,9 +15,6 @@ const Header = () => {
 				<Link style={styles} to="/">
 					Home
 				</Link>
-				<Link style={styles} to="/login">
-					Login
-				</Link>
 			</Toolbar>
 		</AppBar>
 	);

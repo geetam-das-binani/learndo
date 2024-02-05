@@ -19,7 +19,7 @@ export const translateWords = async (params: LangType): Promise<WordType[]> => {
 		const words = randomWords.map((i: string) => ({
 			Text: i,
 		}));
-
+		const rapidApiKey = import.meta.env.VITE_RAPID_API_KEY;
 		const response = await axios.post(
 			"https://microsoft-translator-text.p.rapidapi.com/translate",
 			words,
@@ -32,8 +32,8 @@ export const translateWords = async (params: LangType): Promise<WordType[]> => {
 				},
 				headers: {
 					"content-type": "application/json",
-					"X-RapidAPI-Key":
-						"3bff2d8922mshe47a998528b5daep1a5c36jsnd0be5b147954",
+					"X-RapidAPI-Key": rapidApiKey,
+
 					"X-RapidAPI-Host": "microsoft-translator-text.p.rapidapi.com",
 				},
 			}
