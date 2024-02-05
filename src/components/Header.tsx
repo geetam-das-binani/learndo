@@ -5,6 +5,7 @@ const styles = {
 	margin: ".5rem",
 	textDecoration: "none",
 };
+
 const Header = () => {
 	return (
 		<AppBar position="static">
