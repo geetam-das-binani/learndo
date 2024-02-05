@@ -1,10 +1,17 @@
-import "../styles/Loader.css";
-
+import { Box } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 const Loader = () => {
 	return (
-		<div className="container">
-			<div className="circle"></div>
-		</div>
+		<Box
+			sx={{
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				height: "100vh",
+			}}
+		>
+			<CircularProgress size={100} color="error" />
+		</Box>
 	);
 };
 export default Loader;
