@@ -1,9 +1,9 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button, Container, Typography, Stack } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
-import { translateWords } from "../utils/features";
+import { translateWords, fetchAudio } from "../utils/features";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	getWordsSuccess,
@@ -12,6 +12,7 @@ import {
 	clearState,
 } from "../Reducers/slices";
 import Loader from "./Loader";
+
 const Learning = () => {
 	const params = useSearchParams()[0].get("language") as LangType;
 	const dispatch = useDispatch();
@@ -20,9 +21,23 @@ const Learning = () => {
 	);
 
 	const [count, setCount] = useState<number>(0);
+	const [audioSrc, setAudioSrc] = useState<string>("");
+	const audioRef = useRef<HTMLAudioElement>(null);
 	const navigate = useNavigate();
+
+	const audioHandler = async () => {
+		const player: HTMLAudioElement = audioRef.current!;
+		if (player) {
+			player.play();
+		} else {
+			const data = await fetchAudio(words[count]?.word, params);
+			setAudioSrc(data);
+		}
+	};
+
 	const nextHandler = (): void => {
 		setCount((prev) => prev + 1);
+		setAudioSrc("");
 	};
 	useEffect(() => {
 		dispatch(getWordsRequest());
@@ -52,6 +67,7 @@ const Learning = () => {
 				padding: "1rem",
 			}}
 		>
+			{audioSrc && <audio src={audioSrc} autoPlay ref={audioRef}></audio>}
 			<Button
 				onClick={
 					count === 0 ? () => navigate("/") : () => setCount((prev) => prev - 1)
@@ -71,6 +87,7 @@ const Learning = () => {
 					sx={{
 						borderRadius: "50%",
 					}}
+					onClick={audioHandler}
 				>
 					<VolumeUpIcon />
 				</Button>

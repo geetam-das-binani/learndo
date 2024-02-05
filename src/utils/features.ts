@@ -53,3 +53,42 @@ export const translateWords = async (params: LangType): Promise<WordType[]> => {
 		throw new Error("Some Error");
 	}
 };
+
+export const fetchAudio = async (
+	text: string,
+	language: LangType
+): Promise<string> => {
+	const key = import.meta.env.VITE_TEXT_TO_SPEECH_API_KEY;
+	const rapidApiKey = import.meta.env.VITE_RAPID_API_KEY;
+
+	const encodedParams = new URLSearchParams({
+		src: text,
+
+		r: "0",
+		c: "mp3",
+		f: "8khz_8bit_mono",
+		b64: "true",
+	});
+	if (language === "ja") encodedParams.set("hl", "ja-jp");
+	if (language === "hi") encodedParams.set("hl", "hi-in");
+	if (language === "es") encodedParams.set("hl", "es-es");
+	if (language === "fr") encodedParams.set("hl", "fr-fr");
+
+	const { data }: { data: string } = await axios.post(
+		"https://voicerss-text-to-speech.p.rapidapi.com/",
+		encodedParams,
+		{
+			headers: {
+				"content-type": "application/x-www-form-urlencoded",
+				"X-RapidAPI-Key": rapidApiKey,
+				"X-RapidAPI-Host": "voicerss-text-to-speech.p.rapidapi.com",
+			},
+
+			params: {
+				key,
+			},
+		}
+	);
+
+	return data;
+};
